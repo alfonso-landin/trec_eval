@@ -7,6 +7,7 @@
 
 
 #include "common.h"
+#include "read_file.h"
 #include "sysfunc.h"
 #include "trec_eval.h"
 #include "trec_format.h"
@@ -76,8 +77,6 @@ static REL_INFO *rel_info_pool = NULL;
 int
 te_get_qrels (EPI *epi, char *text_qrels_file, ALL_REL_INFO *all_rel_info)
 {
-    FILE *fd;
-    int size = 0;
     char *ptr;
     char *current_qid;
     long i;
@@ -91,24 +90,12 @@ te_get_qrels (EPI *epi, char *text_qrels_file, ALL_REL_INFO *all_rel_info)
     TEXT_QRELS *text_qrels_ptr;
     
     /* Read entire file into memory */
-    if (!(fd = fopen (text_qrels_file, "rb")) ||
-        fseek (fd, 0L, SEEK_END) != 0 || 0 >= (size = ftell(fd)) ||
-        NULL == (trec_qrels_buf = malloc ((unsigned) size+2)) ||
-        -1 == fseek (fd, 0L, SEEK_SET) ||
-        size != fread (trec_qrels_buf, 1, size, fd) ||
-        -1 == fclose (fd)) {
+    if (UNDEF == read_file(text_qrels_file, &trec_qrels_buf)) {
         fprintf (stderr,
 		 "trec_eval.get_qrels: Cannot read qrels file '%s'\n",
 		 text_qrels_file);
         return (UNDEF);
     }
-
-    /* Append ending newline if not present, Append NULL terminator */
-    if (trec_qrels_buf[size-1] != '\n') {
-	trec_qrels_buf[size] = '\n';
-	size++;
-    }
-    trec_qrels_buf[size] = '\0';
 
     /* Count number of lines in file */
     num_lines = 0;

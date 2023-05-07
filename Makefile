@@ -20,7 +20,7 @@ CFLAGS   = -g -I$H  -Wall -DVERSIONID=\"$(VERSIONID)\"
 INSTALL = /bin/mv
 
 TOP_SRCS = trec_eval.c formats.c meas_init.c meas_acc.c meas_avg.c \
-	meas_print_single.c meas_print_final.c
+	meas_print_single.c meas_print_final.c read_file.c
 
 FORMAT_SRCS = get_qrels.c get_trec_results.c get_prefs.c get_qrels_prefs.c \
 	get_qrels_jg.c form_res_rels.c form_res_rels_jg.c \
@@ -51,7 +51,7 @@ SRCH = common.h trec_eval.h sysfunc.h functions.h trec_format.h
 SRCOTHER = README Makefile test bpref_bug CHANGELOG windows
 
 trec_eval: $(SRCS) Makefile $(SRCH)
-	$(CC) $(CFLAGS)  -o trec_eval $(SRCS) -lm
+	$(CC) $(CFLAGS)  -o trec_eval $(SRCS) -lm -lz
 
 install: $(BIN)/trec_eval
 
