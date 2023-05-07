@@ -51,7 +51,7 @@ SRCH = common.h trec_eval.h sysfunc.h functions.h trec_format.h
 SRCOTHER = README Makefile test bpref_bug CHANGELOG windows
 
 trec_eval: $(SRCS) Makefile $(SRCH)
-	$(CC) $(CFLAGS)  -o trec_eval $(SRCS) -lm -lz
+	$(CC) $(CFLAGS)  -o trec_eval $(SRCS) -lm -lz -lzstd
 
 install: $(BIN)/trec_eval
 

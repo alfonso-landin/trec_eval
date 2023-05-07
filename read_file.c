@@ -8,6 +8,7 @@
 #include "read_file.h"
 #include "common.h"
 #include "sysfunc.h"
+#include <zstd.h>
 #include <zlib.h>
 
 #define GZBUFFER_SIZE (128 * 1024)
@@ -65,12 +66,34 @@ read_file_gzip (char *file_path, char **dest, unsigned int *size)
 }
 
 int
+read_file_zstd(char *file_path, char **dest, unsigned int *size) {
+    unsigned int c_size;
+    char *c_buf;
+    if (UNDEF == read_file_open(file_path, &c_buf, &c_size)) {
+	free(c_buf);
+	return(UNDEF);
+    }
+    if (ZSTD_CONTENTSIZE_ERROR == (*size = ZSTD_getFrameContentSize(c_buf, c_size)) ||
+	ZSTD_CONTENTSIZE_UNKNOWN == *size ||
+	NULL == (*dest = malloc(*size + 2)) ||
+	*size != ZSTD_decompress(*dest, *size, c_buf, c_size))
+    {
+	free(c_buf);
+	return(UNDEF);
+    }
+    free(c_buf);
+    return 0;
+}
+
+int
 read_file (char *file_path, char **dest)
 {
     unsigned int size = 0;
     int result;
     if (ends_with(file_path, ".gz")) {
 	result = read_file_gzip(file_path, dest, &size);
+    } else if (ends_with(file_path, ".zst")) {
+	result = read_file_zstd(file_path, dest, &size);
     } else {
 	result = read_file_open(file_path, dest, &size);
     }
