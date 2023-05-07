@@ -27,7 +27,7 @@ ends_with (const char *str, const char *suffix)
 }
 
 int
-read_file_open (char *file_path, char **dest, unsigned int *size)
+read_file_open (char *file_path, char **dest, unsigned long long *size)
 {
     FILE *fd;
     if (!(fd = fopen(file_path, "rb")) ||
@@ -43,17 +43,19 @@ read_file_open (char *file_path, char **dest, unsigned int *size)
 }
 
 int
-read_file_gzip (char *file_path, char **dest, unsigned int *size)
+read_file_gzip (char *file_path, char **dest, unsigned long long *size)
 {
     FILE *fd;
     gzFile gz;
+    unsigned int ui_size;
     if (!(fd = fopen(file_path, "rb")) ||
-	-1 == fseek(fd, -sizeof(*size), SEEK_END) ||
-	1 != fread(size, sizeof(*size), 1, fd) ||
+	-1 == fseek(fd, -sizeof(ui_size), SEEK_END) ||
+	1 != fread(&ui_size, sizeof(ui_size), 1, fd) ||
 	-1 == fclose(fd))
     {
 	return (UNDEF);
     }
+    *size = ui_size;
     if (NULL == (*dest = malloc(*size + 2)) ||
     	NULL == (gz = gzopen(file_path, "rb"))||
         -1 == gzbuffer(gz, GZBUFFER_SIZE) ||
@@ -66,8 +68,8 @@ read_file_gzip (char *file_path, char **dest, unsigned int *size)
 }
 
 int
-read_file_zstd(char *file_path, char **dest, unsigned int *size) {
-    unsigned int c_size;
+read_file_zstd(char *file_path, char **dest, unsigned long long *size) {
+    unsigned long long c_size;
     char *c_buf;
     if (UNDEF == read_file_open(file_path, &c_buf, &c_size)) {
 	free(c_buf);
@@ -88,7 +90,7 @@ read_file_zstd(char *file_path, char **dest, unsigned int *size) {
 int
 read_file (char *file_path, char **dest)
 {
-    unsigned int size = 0;
+    unsigned long long size = 0;
     int result;
     if (ends_with(file_path, ".gz")) {
 	result = read_file_gzip(file_path, dest, &size);
