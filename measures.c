@@ -81,8 +81,10 @@ extern TREC_MEAS te_meas_binG;
 extern TREC_MEAS te_meas_G;
 extern TREC_MEAS te_meas_ndcg;
 extern TREC_MEAS te_meas_ndcg_rel;
+extern TREC_MEAS te_meas_ndcg_rel_lvl;
 extern TREC_MEAS te_meas_Rndcg;
 extern TREC_MEAS te_meas_ndcg_cut;
+extern TREC_MEAS te_meas_ndcg_rel_lvl_cut;
 extern TREC_MEAS te_meas_map_cut;
 extern TREC_MEAS te_meas_relative_P;
 extern TREC_MEAS te_meas_success;
@@ -134,9 +136,11 @@ TREC_MEAS *te_trec_measures[] = {
     &te_meas_binG,
     &te_meas_G,
     &te_meas_ndcg,
+    &te_meas_ndcg_rel_lvl,
     &te_meas_ndcg_rel,
     &te_meas_Rndcg,
     &te_meas_ndcg_cut,
+    &te_meas_ndcg_rel_lvl_cut,
     &te_meas_map_cut,
     &te_meas_relative_P,
     &te_meas_success,
@@ -200,6 +204,12 @@ static char *qrels_jg_names[] = {
     "runid", "num_q",
     "map_avgjg", "P_avgjg", "Rprec_mult_avgjg",
     NULL};
+static char *recsys_names[] = { "runid", "num_q", "num_ret", "num_rel",
+    "num_rel_ret", "map", "map_cut", "bpref", "recip_rank",
+    "P", "recall", "ndcg", "ndcg_cut",
+    "ndcg_rel_lvl", "ndcg_rel_lvl_cut", "set_P",
+    "set_recall", "set_F", "num_nonrel_judged_ret", "yaap",
+    NULL };
 
 TREC_MEASURE_NICKNAMES te_trec_measure_nicknames[] = {
     {"official", off_names},
@@ -208,6 +218,7 @@ TREC_MEASURE_NICKNAMES te_trec_measure_nicknames[] = {
     {"all_prefs", prefs_names},
     {"prefs", prefs_off_name},
     {"qrels_jg", qrels_jg_names},
+    {"recsys", recsys_names}
 };
 int te_num_trec_measure_nicknames =
     sizeof (te_trec_measure_nicknames) / sizeof (te_trec_measure_nicknames[0]);
