@@ -43,7 +43,9 @@ MEAS_SRCS =  measures.c  m_map.c m_P.c m_num_q.c m_num_ret.c m_num_rel.c \
         m_prefs_avgjg_Rnonrel_ret.c \
 	m_prefs_simp_imp.c m_prefs_pair_imp.c m_prefs_avgjg_imp.c\
         m_map_avgjg.c m_Rprec_mult_avgjg.c m_P_avgjg.c m_yaap.c \
-	m_ndcg_rel_lvl.c m_ndcg_rel_lvl_cut.c
+	m_ndcg_rel_lvl.c m_ndcg_rel_lvl_cut.c \
+	m_err.c m_rmse.c m_mae.c m_err_rel_lvl.c m_infap2.c m_ndcg2.c \
+	m_ndcg2_cut.c m_qm.c m_qm_cut.c m_qm_rel_lvl_cut.c m_qm_rel_lvl.c
 
 SRCS = $(TOP_SRCS) $(FORMAT_SRCS) $(MEAS_SRCS)
 
